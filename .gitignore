@@ -1,0 +1,15 @@
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+/bin
+/target
+
+# eclipse ignore
+.settings/
+.project
+.classpath
+
