@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gyang.test">
+  <select id="selectUser" resultType="org.stock.db.test.sqlite.User">
+    select * from test where id = #{id}
+  </select>
+  <select id="selectUserToMap" resultType="hashmap">
+    select * from test
+  </select>
+  <select id="selectUserToList" resultType="org.stock.db.test.sqlite.User">
+    select * from test
+  </select>  
+</mapper>

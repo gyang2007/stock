@@ -7,9 +7,7 @@
     <artifactId>stock-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <groupId>com.gyang</groupId>
   <artifactId>stock-analysis</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
   <name>stock-analysis</name>
   <url>http://maven.apache.org</url>
   <properties>
