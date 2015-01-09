@@ -15,13 +15,27 @@
 		<property name="url" value="${sqlite.jdbc.url}" />
 	</bean>
 
+	<bean id="mysqlDataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${mysql.jdbc.driver}"></property>
+		<property name="url" value="${mysql.jdbc.url}"></property>
+		<property name="username" value="${mysql.jdbc.username}"></property>
+		<property name="password" value="${mysql.jdbc.password}"></property>
+		<property name="maxActive" value="100"></property>
+		<property name="maxIdle" value="30"></property>
+		<property name="maxWait" value="500"></property>
+	</bean>
+
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="sqliteDataSource" />
+		<property name="dataSource" ref="mysqlDataSource" />
 		<property name="mapperLocations" value="classpath*:mybatis/*.xml" />
 	</bean>
 
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg index="0" ref="sqlSessionFactory" />
+		<constructor-arg index="1" value="BATCH" />
 	</bean>
 
+	<import resource="application-dao.xml" />
+	<import resource="application-service.xml" />
+	
 </beans>

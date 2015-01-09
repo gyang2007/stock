@@ -1,4 +1,4 @@
-package org.stock.fetch;
+package org.stock.fetch.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -127,5 +127,12 @@ public class HttpRequest {
 			}
 		}
 		return result;
+	}
+	
+	public static void main(String[] args) {
+		String url = "http://xueqiu.com/stock/cata/stocklist.json";
+		String param = "page=1&size=90&order=desc&orderby=code&type=11%2C12";
+		
+		sendGet(url, param);
 	}
 }

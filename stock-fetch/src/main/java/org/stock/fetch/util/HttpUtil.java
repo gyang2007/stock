@@ -166,7 +166,6 @@ public class HttpUtil {
 					"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
 		}
 
-		urlConnection.connect();
 		if (method.equalsIgnoreCase("POST") && parameters != null) {
 			StringBuffer param = new StringBuffer();
 			for (String key : parameters.keySet()) {
@@ -204,6 +203,7 @@ public class HttpUtil {
 			}
 			bufferedReader.close();
 			String ecod = urlConnection.getContentEncoding();
+			ecod = null;
 			if (ecod == null) {
 				ecod = this.defaultContentEncoding;
 			}
@@ -544,7 +544,8 @@ public class HttpUtil {
 		params.put("size", "90");
 		params.put("order", "desc");
 		params.put("orderby", "code");
-		params.put("type", "11%2C12");
+//		params.put("type", "11%2C12");
+		params.put("type", "11,12");
 
 		HttpResponse response = hu.sendGet(
 				"http://xueqiu.com/stock/cata/stocklist.json", params);

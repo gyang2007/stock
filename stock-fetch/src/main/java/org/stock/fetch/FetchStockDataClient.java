@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.stock.fetch.util.HttpRequest;
+
 public class FetchStockDataClient {
 	private static final String getUrl = "http://table.finance.yahoo.com/table.csv";
 //	private static final String getUrl = "http://ichart.yahoo.com/table.csv";
