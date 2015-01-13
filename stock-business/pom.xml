@@ -8,25 +8,36 @@
 		<artifactId>stock-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>stock-fetch</artifactId>
-	<name>stock-fetch</name>
+	<artifactId>stock-business</artifactId>
+	<name>stock-business</name>
 	<url>http://maven.apache.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-
 	<dependencies>
 
 		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-			<version>2.6</version>
+			<groupId>com.gyang</groupId>
+			<artifactId>stock-common</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-			<version>1.2.3</version>
+			<groupId>com.gyang</groupId>
+			<artifactId>stock-db</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.gyang</groupId>
+			<artifactId>stock-fetch</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.gyang</groupId>
+			<artifactId>stock-analysis</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 
 	</dependencies>

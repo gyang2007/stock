@@ -14,6 +14,12 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+/**
+ * 抓取上证、深圳股票基本信息
+ * 
+ * @author gyang
+ *
+ */
 public class FetchStockBaseInfoClient {
 
 	private static final String FILE_STOCK_BASE_INFO = "/home/gyang/stockBaseInfo.txt";
