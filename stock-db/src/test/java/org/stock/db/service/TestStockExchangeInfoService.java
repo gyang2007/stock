@@ -50,14 +50,14 @@ public class TestStockExchangeInfoService {
 				int count = 1;
 				
 				String fileDirPath = "/home/gyang/.stock/files/hs";
-				int type = StockType.SHH_CI.getValue();
+				int type = StockType.SH.getValue();
 				
 				File fileDir = new File(fileDirPath);
 				File[] files = fileDir.listFiles();
 				for(File f : files) {
 					try {
 						save(f, f.getName().substring(0, f.getName().indexOf(".")), type);
-						System.out.println(StockType.SHH_CI.getLabel() + ":" + count++);
+						System.out.println(StockType.SH.getLabel2() + ":" + count++);
 					} catch (NumberFormatException e) {
 						e.printStackTrace();
 					} catch (IOException e) {
@@ -75,13 +75,13 @@ public class TestStockExchangeInfoService {
 			public void run() {		
 			int count = 1;
 			String fileDirPath = "/home/gyang/.stock/files/sh";
-			int type = StockType.SHZH_CI.getValue();
+			int type = StockType.SZ.getValue();
 			File fileDir = new File(fileDirPath);
 			File[] files = fileDir.listFiles();
 			for(File f : files) {
 				try {
 					save(f, f.getName().substring(0, f.getName().indexOf(".")), type);
-					System.out.println(StockType.SHZH_CI + ":" + count++);
+					System.out.println(StockType.SZ + ":" + count++);
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
 				} catch (IOException e) {

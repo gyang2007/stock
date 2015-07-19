@@ -6,9 +6,11 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang.StringUtils;
@@ -39,16 +41,60 @@ public class PullStockExchangeInfoData {
 	// 1990-12-19 00:00:00 ----> 661536000000
 	
 	private static final Date INIT_DATE = new Date(661536000000L);
-	// 两天时间
-	private static final int TIME_GAP = 2 * 86400000;
+	private static final int TIME_GAP = 1 * 24 * 60 * 60 * 1000;
 
 	public PullStockExchangeInfoData() {
 		
 	}
 	
 	public void pull() {
+		List<StockExchangeInfo> stockExchangeInfos = exchangeInfoService.selectMaxDate();
+		int count = 0;
+		StockExchangeInfo stockExchangeInfo;
+		for(Iterator<StockExchangeInfo> iter = stockExchangeInfos.iterator(); iter.hasNext(); ) {
+			stockExchangeInfo = iter.next();
+			System.out.println(count++);
+			LOGGER.info("Pull code={}, type={}, recordTime={} exchange info.", new Object[]{stockExchangeInfo.getCode(), stockExchangeInfo.getType(), DateFormatUtils.format(stockExchangeInfo.getRecordTime(), "yyyy-MM-dd")});
+//			if(stockExchangeInfo.getRecordTime().getTime() > DateUtils.setHours(new Date(System.currentTimeMillis()), 0).getTime()) {
+			if((new Date(System.currentTimeMillis()).getTime() - stockExchangeInfo.getRecordTime().getTime()) < (1 * 15 * 60 * 1000) ) {
+				continue;
+			}
+			else {
+				StockBaseInfo baseInfo = new StockBaseInfo();
+				baseInfo.setCode(stockExchangeInfo.getCode());
+				baseInfo.setType(stockExchangeInfo.getType());
+				pull(baseInfo, DateUtils.addDays(stockExchangeInfo.getRecordTime(), 1));
+				
+				try {
+					TimeUnit.SECONDS.sleep(1);
+				} catch (InterruptedException e) {
+					LOGGER.error("", e);
+				}
+			}
+		}
+		
+		// stock_base_info与stock_exchange_info数据表差集
+		Set<String> codeTypeSet = new HashSet<String>();
+		for(Iterator<StockExchangeInfo> iter = stockExchangeInfos.iterator(); iter.hasNext(); ) {
+			stockExchangeInfo = iter.next();
+			codeTypeSet.add(stockExchangeInfo.getCode() + ":" + stockExchangeInfo.getType());
+		}
 		List<StockBaseInfo> baseInfos = baseInfoService.selectAllStockBaseInfoList();
-
+		StockBaseInfo stockBaseInfo;
+		for(Iterator<StockBaseInfo> iter = baseInfos.iterator(); iter.hasNext(); ) {
+			stockBaseInfo = iter.next();
+			if(!codeTypeSet.contains(stockBaseInfo.getCode() + ":" + stockBaseInfo.getType())) {
+				pull(stockBaseInfo, INIT_DATE);
+				
+				try {
+					TimeUnit.SECONDS.sleep(1);
+				} catch (InterruptedException e) {
+					LOGGER.error("", e);
+				}
+			}
+		}
+		
+/*		List<StockBaseInfo> baseInfos = baseInfoService.selectAllStockBaseInfoList();
 		int count = 1;
 		for (StockBaseInfo baseInfo : baseInfos) {
 			System.out.println(count++);
@@ -67,7 +113,7 @@ public class PullStockExchangeInfoData {
 			} catch (InterruptedException e) {
 				LOGGER.error("", e);
 			}
-		}
+		}*/
 
 	}
 	
@@ -90,11 +136,17 @@ public class PullStockExchangeInfoData {
 		
 		Date sd = startDate;
 		Date ed = getNextDate(sd);
-		while((ed.getTime() - sd.getTime()) > TIME_GAP) {
+//		while((ed.getTime() - sd.getTime()) > TIME_GAP) {
+		while(ed.after(sd)) {
 			params.put("begin", String.valueOf(sd.getTime()));
 			params.put("end", String.valueOf(ed.getTime()));
+			
+			String content = null;
 			try {
-				exchangeInfos.addAll(parse(baseInfo, fetch.fetchFromXueqiu(params)));
+				content = fetch.fetchFromXueqiu(params);
+				if(!StringUtils.isBlank(content)) {
+					exchangeInfos.addAll(parse(baseInfo, content));
+				}
 			} catch (IOException e) {
 				LOGGER.error("", e);
 				
@@ -105,7 +157,7 @@ public class PullStockExchangeInfoData {
 			ed = getNextDate(sd);
 			
 			try {
-				TimeUnit.MILLISECONDS.sleep(1 * 100);
+				TimeUnit.MILLISECONDS.sleep(1 * 10);
 			} catch (InterruptedException e) {
 				LOGGER.error("", e);
 			}
@@ -113,7 +165,7 @@ public class PullStockExchangeInfoData {
 		
 		if(exchangeInfos.size() > 0) {
 			LOGGER.info("Save stock exchange info, code={}, type={}, {} records in total.", new Object[]{baseInfo.getCode(), baseInfo.getType(), exchangeInfos.size()});
-//			exchangeInfoService.saveStockExchangeInfoList(exchangeInfos);
+			exchangeInfoService.saveStockExchangeInfoList(exchangeInfos);
 		}
 	}
 	
@@ -138,11 +190,6 @@ public class PullStockExchangeInfoData {
         "time": "Wed Jan 14 00:00:00 +0800 2015"
     }*/
 	private List<StockExchangeInfo> parse(StockBaseInfo baseInfo, String value) {
-		if(StringUtils.isBlank(value)) {
-			LOGGER.error("Invalid value.");
-			throw new InvalidParameterException();
-		}
-		
 		List<StockExchangeInfo> infos = new ArrayList<StockExchangeInfo>();
 		StockExchangeInfo info;
 		
@@ -190,8 +237,14 @@ public class PullStockExchangeInfoData {
 		Date nd = DateUtils.addYears(sd, 1);
 		Date cd = new Date(System.currentTimeMillis());
 		if(nd.getTime() > cd.getTime()) {
-			DateUtils.setHours(cd, 0);
-			return cd;
+			// 当前时间在15点之后
+			if(cd.after(DateUtils.setHours(cd, 15))) {
+				Date d = DateUtils.addDays(cd, 1);
+				return DateUtils.setHours(d, 0);
+			}
+			else {
+				return DateUtils.setHours(cd, 0);
+			}
 		}
 		
 		return DateUtils.addYears(sd, 1);
@@ -213,21 +266,15 @@ public class PullStockExchangeInfoData {
 	}
 
 	public static void main(String[] args) throws ParseException {
-/*		PullStockExchangeInfoData p = new PullStockExchangeInfoData();
-		p.pull();*/
+		PullStockExchangeInfoData p = new PullStockExchangeInfoData();
+		p.pull();
 		
 //		System.out.println(DateUtils.parseDate("2015-01-14 00:00:00", new String[]{"yyyy-MM-dd HH:mm:ss"}).getTime());
 //		System.out.println(DateFormatUtils.format(new Date(1421164800000L), "yyyy-MM-dd HH:mm:ss"));
 		
-		new PullStockExchangeInfoData().test1();
+//		new PullStockExchangeInfoData().test1();
 	}
 	
 	private void test1() {
-		StockBaseInfo info = new StockBaseInfo();
-		info.setCode(200413);
-		info.setName("");
-		info.setType(20);
-		
-		pull(info, INIT_DATE);
 	}
 }

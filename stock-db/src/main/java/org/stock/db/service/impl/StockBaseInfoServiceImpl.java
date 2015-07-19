@@ -3,6 +3,7 @@ package org.stock.db.service.impl;
 import java.util.List;
 
 import org.stock.db.bean.StockBaseInfo;
+import org.stock.db.common.StockType;
 import org.stock.db.dao.StockBaseInfoDao;
 import org.stock.db.service.IStockBaseInfoService;
 
@@ -22,6 +23,16 @@ public class StockBaseInfoServiceImpl implements IStockBaseInfoService {
 	@Override
 	public void saveStockBaseInfoList(List<StockBaseInfo> infos) {
 		stockBaseInfoDao.saveStockBaseInfo(infos);
+	}
+
+	@Override
+	public List<StockBaseInfo> selectAllStockBaseInfoList() {
+		return stockBaseInfoDao.selectAllStockBaseInfoList();
+	}
+
+	@Override
+	public List<StockBaseInfo> selectStockBaseInfoListByType(StockType type) {
+		return stockBaseInfoDao.selectStockBaseInfoListByType(type.getValue());
 	}
 
 }

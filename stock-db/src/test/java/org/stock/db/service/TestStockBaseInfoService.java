@@ -44,10 +44,10 @@ public class TestStockBaseInfoService {
 	
 	private int getType(String typeStr) {
 		if(typeStr.endsWith("1")) {
-			return StockType.SHH_CI.getValue();
+			return StockType.SH.getValue();
 		}
 		else if(typeStr.endsWith("2")) {
-			return StockType.SHZH_CI.getValue();
+			return StockType.SZ.getValue();
 		}
 		
 		return -1;

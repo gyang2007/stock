@@ -48,4 +48,10 @@ public class StockBaseInfo implements Serializable {
 	public void setDescp(String descp) {
 		this.descp = descp;
 	}
+
+	@Override
+	public String toString() {
+		return "StockBaseInfo [code=" + code + ", name=" + name + ", type="
+				+ type + "]";
+	}
 }
