@@ -7,10 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.stock.db.bean.StockBaseInfo;
 import org.stock.db.common.StockType;
 import org.stock.db.util.SpringService;
 
+/**
+ * 存储股票基本信息
+ */
 public class TestStockBaseInfoService {
 	@Test
 	public void testSave() throws IOException {
@@ -51,5 +56,12 @@ public class TestStockBaseInfoService {
 		}
 		
 		return -1;
+	}
+
+	@Test
+	public void testSelect() {
+		IStockBaseInfoService service = (IStockBaseInfoService) SpringService.getInstance().getService("stockBaseInfoService");
+		System.out.println(service.selectStockBaseInfoById(20));
+//		System.out.println(service.selectAllStockBaseInfoList());
 	}
 }

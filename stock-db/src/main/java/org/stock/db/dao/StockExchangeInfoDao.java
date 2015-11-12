@@ -24,12 +24,20 @@ public class StockExchangeInfoDao {
 	public StockExchangeInfo selectByCodeFomMaxDate(StockBaseInfo info) {
 		return (StockExchangeInfo) this.sqlSession.selectOne("org.stock.db.bean.StockExchangeInfo.selectByCodeFomMaxDate", info);
 	}
+
+	public StockExchangeInfo selectByCodeTypeFomMaxDate(StockBaseInfo info) {
+		return (StockExchangeInfo) this.sqlSession.selectOne("org.stock.db.bean.StockExchangeInfo.selectByCodeTypeFomMaxDate", info);
+	}
 	
-	public StockExchangeInfo selectByCode(StockBaseInfo info) {
-		return (StockExchangeInfo) this.sqlSession.selectOne("org.stock.db.bean.StockExchangeInfo.selectByCode", info);
+	public StockExchangeInfo selectByCodeType(StockBaseInfo info) {
+		return (StockExchangeInfo) this.sqlSession.selectOne("org.stock.db.bean.StockExchangeInfo.selectByCodeType", info);
 	}
 	
 	public List<StockExchangeInfo> selectMaxDate() {
 		return this.sqlSession.selectList("org.stock.db.bean.StockExchangeInfo.selectMaxDate");
 	}
+
+    public int updateTypeByCode(StockExchangeInfo info) {
+        return this.sqlSession.update("org.stock.db.bean.StockExchangeInfo.updateTypeByCode", info);
+    }
 }

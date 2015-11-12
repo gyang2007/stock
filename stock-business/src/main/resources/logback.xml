@@ -12,13 +12,12 @@
 
 	<appender name="dailyRollingFileAppender"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<File>/home/gyang/stock/fetch.log</File>
+		<File>/home/gyang/stock/business.log</File>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<!-- daily rollover -->
-			<FileNamePattern>business.%d{yyyy-MM-dd}.log</FileNamePattern>
-
+			<FileNamePattern>/home/gyang/stock/business.log.%d{yyyy-MM-dd-HH}.gz</FileNamePattern>
 			<!-- keep 30 days' worth of history -->
-			<maxHistory>30</maxHistory>
+			<!--<maxHistory>30</maxHistory>-->
 		</rollingPolicy>
 
 		<encoder>

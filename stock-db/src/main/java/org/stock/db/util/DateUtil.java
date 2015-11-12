@@ -1,5 +1,8 @@
 package org.stock.db.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -7,11 +10,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 public class DateUtil {
-	protected static Log logger = LogFactory.getLog(DateUtil.class);
+	protected static Logger logger = LoggerFactory.getLogger(DateUtil.class);
 
 	// 格式：年－月－日 小时：分钟：秒
 	public static final String FORMAT_ONE = "yyyy-MM-dd HH:mm:ss";
@@ -281,7 +281,7 @@ public class DateUtil {
 	/**
 	 * 比较两个日期的年差
 	 *
-	 * @param befor
+	 * @param before
 	 * @param after
 	 * @return
 	 */
@@ -294,7 +294,6 @@ public class DateUtil {
 	/**
 	 * 比较指定日期与当前日期的差
 	 *
-	 * @param befor
 	 * @param after
 	 * @return
 	 */
@@ -426,19 +425,19 @@ public class DateUtil {
 	}
 
 	/**
-	 * 取得指定日期过 months 月后的日期 (当 months 为负数表示指定月之前);
+	 * 取得指定日期过 month 月后的日期 (当 month 为负数表示指定月之前);
 	 *
 	 * @param date
 	 *            日期 为null时表示当天
 	 * @param month
 	 *            相加(相减)的月数
 	 */
-	public static Date nextMonth(Date date, int months) {
+	public static Date nextMonth(Date date, int month) {
 		Calendar cal = Calendar.getInstance();
 		if (date != null) {
 			cal.setTime(date);
 		}
-		cal.add(Calendar.MONTH, months);
+		cal.add(Calendar.MONTH, month);
 		return cal.getTime();
 	}
 
@@ -447,8 +446,8 @@ public class DateUtil {
 	 *
 	 * @param date
 	 *            日期 为null时表示当天
-	 * @param month
-	 *            相加(相减)的月数
+	 * @param day
+	 *            相加(相减)的天数
 	 */
 	public static Date nextDay(Date date, int day) {
 		Calendar cal = Calendar.getInstance();

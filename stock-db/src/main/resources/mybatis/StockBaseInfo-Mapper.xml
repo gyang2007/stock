@@ -3,16 +3,24 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.stock.db.bean.StockBaseInfo">
+	<sql id="allColumn">
+		id, code, name, type, descp, record_time as recordTime
+	</sql>
+
 	<select id="selectAll" resultType="org.stock.db.bean.StockBaseInfo">
-		select * from stock_base_info
+		select <include refid="allColumn"/> from stock_base_info
 	</select>
 	
 	<select id="selectByType" parameterType="int" resultType="org.stock.db.bean.StockBaseInfo">
-		select * from stock_base_info where type = #{type}
-	</select>	
+		select <include refid="allColumn"/> from stock_base_info where type = #{type}
+	</select>
 
-	<select id="selectByCodeType" parameterType="int" resultType="org.stock.db.bean.StockBaseInfo">
-		select * from stock_base_info where code = #{code} and type = #{type}
+	<select id="selectById" parameterType="int" resultType="org.stock.db.bean.StockBaseInfo">
+		select <include refid="allColumn"/> from stock_base_info where id = #{id}
+	</select>
+
+	<select id="selectByCodeType" parameterType="org.stock.db.bean.StockBaseInfo" resultType="org.stock.db.bean.StockBaseInfo">
+		select <include refid="allColumn"/> from stock_base_info where code = #{code} and type = #{type}
 	</select>
 
 	<insert id="insert" parameterType="org.stock.db.bean.StockBaseInfo"

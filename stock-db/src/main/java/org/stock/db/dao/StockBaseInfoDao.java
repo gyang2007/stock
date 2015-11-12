@@ -2,6 +2,7 @@ package org.stock.db.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.SqlSession;
 import org.stock.db.bean.StockBaseInfo;
 
@@ -26,5 +27,9 @@ public class StockBaseInfoDao {
 	
 	public List<StockBaseInfo> selectStockBaseInfoListByType(int type) {
 		return this.sqlSession.selectList("org.stock.db.bean.StockBaseInfo.selectByType", type);
+	}
+
+	public StockBaseInfo selectStockBaseInfoById(int id) {
+		return this.sqlSession.selectOne("org.stock.db.bean.StockBaseInfo.selectById", id);
 	}
 }

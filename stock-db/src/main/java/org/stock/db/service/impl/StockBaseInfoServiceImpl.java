@@ -2,11 +2,13 @@ package org.stock.db.service.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
 import org.stock.db.bean.StockBaseInfo;
 import org.stock.db.common.StockType;
 import org.stock.db.dao.StockBaseInfoDao;
 import org.stock.db.service.IStockBaseInfoService;
 
+@Service(value = "stockBaseInfoService")
 public class StockBaseInfoServiceImpl implements IStockBaseInfoService {
 	
 	private StockBaseInfoDao stockBaseInfoDao;
@@ -35,4 +37,8 @@ public class StockBaseInfoServiceImpl implements IStockBaseInfoService {
 		return stockBaseInfoDao.selectStockBaseInfoListByType(type.getValue());
 	}
 
+	@Override
+	public StockBaseInfo selectStockBaseInfoById(int id) {
+		return stockBaseInfoDao.selectStockBaseInfoById(id);
+	}
 }

@@ -7,6 +7,8 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd">
 
+	<context:component-scan base-package="org.stock.db.*.*"/>
+	
 	<context:property-placeholder location="config/jdbc.properties" />
 
 	<bean id="sqliteDataSource" class="org.apache.commons.dbcp.BasicDataSource"
@@ -23,6 +25,7 @@
 		<property name="maxActive" value="100"></property>
 		<property name="maxIdle" value="30"></property>
 		<property name="maxWait" value="500"></property>
+		<property name="validationQuery" value="${mysql.jdbc.validSQL}"></property>
 	</bean>
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -32,7 +35,13 @@
 
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg index="0" ref="sqlSessionFactory" />
-		<constructor-arg index="1" value="BATCH" />
+		<constructor-arg index="1" value="SIMPLE" />
+		<!--<constructor-arg index="1" value="BATCH" />-->
+	</bean>
+
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="org.stock.db.dao.*"/>
+		<property name="sqlSessionTemplateBeanName" value="sqlSession"/>
 	</bean>
 
 	<import resource="application-dao.xml" />

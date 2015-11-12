@@ -3,31 +3,47 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.stock.db.bean.StockExchangeInfo">
-	<select id="selectByCode" parameterType="org.stock.db.bean.StockBaseInfo" resultType="org.stock.db.bean.StockExchangeInfo">
-		select id, code, type, open, hight, low, close, adj_close as adjClose, volume, record_time as recordTime from stock_exchange_info where code=#{code} and type=#{type}
+	<sql id="allColumn">
+		id, code, type, open, hight, low, close, volume, price_change as priceChange, total_price_change as totalPriceChange, exch_rate as exchRate, tx_date as txDate, record_time as recordTime
+	</sql>
+
+	<sql id="insertBaseColumn">
+		code, type, open, hight, low, close, volume, price_change, total_price_change, exch_rate, tx_date
+	</sql>
+
+	<select id="selectByCodeType" parameterType="org.stock.db.bean.StockBaseInfo" resultType="org.stock.db.bean.StockExchangeInfo">
+		select <include refid="allColumn" /> from stock_exchange_info where code=#{code} and type=#{type}
 	</select>
 	
+	<select id="selectByCodeTypeFomMaxDate" parameterType="org.stock.db.bean.StockBaseInfo" resultType="org.stock.db.bean.StockExchangeInfo">
+		select <include refid="allColumn" /> from stock_exchange_info where code=#{code} and type=#{type} order by tx_date desc limit 1
+	</select>
+
 	<select id="selectByCodeFomMaxDate" parameterType="org.stock.db.bean.StockBaseInfo" resultType="org.stock.db.bean.StockExchangeInfo">
-		select id, code, type, open, hight, low, close, adj_close as adjClose, volume, record_time as recordTime from stock_exchange_info where code=#{code} and type=#{type} order by record_time desc limit 1
-	</select>	
+		select <include refid="allColumn" /> from stock_exchange_info where code=#{code} order by tx_date desc limit 1
+	</select>
 	
 	<select id="selectMaxDate" resultType="org.stock.db.bean.StockExchangeInfo">
-		select code, type, max(record_time) as recordTime from stock_exchange_info group by code, type
+		select code, type, max(tx_date) as txDate from stock_exchange_info group by code, type
 	</select>	
 	
 	<insert id="insert" parameterType="org.stock.db.bean.StockExchangeInfo"
 		flushCache="true" keyProperty="id" useGeneratedKeys="true">
-		insert into stock_exchange_info(code, type, open, hight, low, close, adj_close, volume, record_time) 
-		values(#{code}, #{type}, #{open}, #{hight}, #{low}, #{close}, #{adjClose}, #{volume}, #{recordTime})
+		insert into stock_exchange_info(<include refid="insertBaseColumn"></include>)
+		values(#{item.code}, #{item.type}, #{item.open}, #{item.hight}, #{item.low}, #{item.close}, #{item.volume}, #{item.priceChange}, #{item.totalPriceChange}, #{item.exchRate}, #{item.txDate})
 	</insert>
 	
 	<insert id="insertBatch" parameterType="java.util.List"
 		flushCache="true">
-		insert into stock_exchange_info(code, type, open, hight, low, close, adj_close, volume, record_time) 
+		insert into stock_exchange_info(<include refid="insertBaseColumn"></include>)
 		values
 		<foreach collection="list" item="item" index="index"  
         separator=",">  
-			(#{item.code}, #{item.type}, #{item.open}, #{item.hight}, #{item.low}, #{item.close}, #{item.adjClose}, #{item.volume}, #{item.recordTime})
+			(#{item.code}, #{item.type}, #{item.open}, #{item.hight}, #{item.low}, #{item.close}, #{item.volume}, #{item.priceChange}, #{item.totalPriceChange}, #{item.exchRate}, #{item.txDate})
     	</foreach> 
 	</insert>
+
+	<update id="updateTypeByCode" parameterType="org.stock.db.bean.StockExchangeInfo">
+		update stock_exchange_info set type=#{type}, record_time=now() where code=#{code}
+	</update>
 </mapper>

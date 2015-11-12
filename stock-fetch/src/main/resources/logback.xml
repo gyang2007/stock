@@ -15,10 +15,9 @@
 		<File>/home/gyang/stock/fetch.log</File>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<!-- daily rollover -->
-			<FileNamePattern>fetch.%d{yyyy-MM-dd}.log</FileNamePattern>
-
+			<FileNamePattern>/home/gyang/stock/fetch.log.%d{yyyy-MM-dd-HH}.gz</FileNamePattern>
 			<!-- keep 30 days' worth of history -->
-			<maxHistory>30</maxHistory>
+			<!--<maxHistory>30</maxHistory>/-->
 		</rollingPolicy>
 
 		<encoder>
