@@ -7,6 +7,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URI;
@@ -18,6 +19,7 @@ import java.util.Date;
  *
  * Created by gyang on 15-9-4.
  */
+@Service("fetchStockDealStatisticsService")
 public class FetchStockDealStatisticsServiceImpl extends AbstractFetchStockDealStatistics {
 
     // eg: http://query.sse.com.cn/security/fund/queryMonthQuat.do?jsonCallBack=jsonpCallback56630&productId=600004&inYear=1996&prodType=1&pageHelp.pageSize=20&_=1441303750829

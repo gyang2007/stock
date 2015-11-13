@@ -12,6 +12,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import org.stock.fetch.bean.StockExchangeData;
 
 import java.io.FileReader;
@@ -27,6 +28,7 @@ import java.util.concurrent.TimeUnit;
  *
  * Created by gyang on 15-9-3.
  */
+@Service("fetchStockExchangeService")
 public class FetchStockExchangeServiceImpl extends AbstractFetchStockExchange {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FetchStockExchangeServiceImpl.class);
@@ -97,7 +99,7 @@ public class FetchStockExchangeServiceImpl extends AbstractFetchStockExchange {
 
     @Override
     public List<StockExchangeData> pullStockExchangeDatas(int code, int type, int year) {
-        List<StockExchangeData> infos = Lists.newArrayList();
+        List<StockExchangeData> stockExchangeDatas = Lists.newArrayList();
         String codeStr = StringUtils.leftPad(String.valueOf(code), 6, '0');
         String httpUrl = String.format(URL_FORMATTER, codeStr, year);
         String httpResult = httpGet(httpUrl);
@@ -115,7 +117,7 @@ public class FetchStockExchangeServiceImpl extends AbstractFetchStockExchange {
 
                     try {
                         info = new StockExchangeData();
-                        infos.add(info);
+                        stockExchangeDatas.add(info);
 
                         info.setCode(code);  // code
                         info.setType(type);  // type
@@ -130,7 +132,7 @@ public class FetchStockExchangeServiceImpl extends AbstractFetchStockExchange {
 
                         try {
                             if(stockVals.length >5) {
-                                info.setVolume(Long.valueOf(stockVals[5])); // 量
+                                info.setVolume(Long.valueOf(stockVals[5])); // volume
                             }
                         } catch (Exception e) {
                             info.setVolume(0L);
@@ -154,7 +156,7 @@ public class FetchStockExchangeServiceImpl extends AbstractFetchStockExchange {
             }
         }
 
-        return infos;
+        return stockExchangeDatas;
     }
 
     private String httpGet(String httpUrl) {
