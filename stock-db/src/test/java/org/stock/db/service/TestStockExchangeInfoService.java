@@ -85,7 +85,7 @@ public class TestStockExchangeInfoService {
             LOGGER.error("Cannot find stock base info record!!!, file = " + file.getName(), new Exception("Cannot find stock base info record!!!"));
             return;
         }
-        stockBaseInfo.setType(StockType.SZ.getValue());
+        stockBaseInfo.setType(StockType.STOCK_INDEX.getValue());
         String endStrPrefix = String.format(START_FORMATTER, StringUtils.left(file.getName(), 6));
         boolean isEnd = false;
 

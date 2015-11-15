@@ -27,7 +27,7 @@ public class StockExchangeInfo implements Serializable {
      */
     private double close;
     /**
-     * 成交量
+     * 成交量(股)
      */
     private long volume;
     /**

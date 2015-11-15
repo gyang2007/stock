@@ -36,8 +36,6 @@ public class FetchStockExchangeServiceImpl extends AbstractFetchStockExchange {
     // eg: http://d.10jqka.com.cn/v2/line/hs_600868/00/2015.js
     private static final String URL_FORMATTER = "http://d.10jqka.com.cn/v2/line/hs_%s/00/%s.js";
 
-    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#0.00#");
-
     private static final Set<String> DUPLICATE_SET = Sets.newHashSet();
 
     private static final int START_YEAR = 1991;
@@ -105,6 +103,9 @@ public class FetchStockExchangeServiceImpl extends AbstractFetchStockExchange {
         String httpResult = httpGet(httpUrl);
         if(StringUtils.isNotEmpty(httpResult)) {
             String content = StringUtils.substringBetween(httpResult, ":\"", "\"}");
+            if(content == null) {
+                LOGGER.error("null null null, httpUrl = {}, httpResult = {}", new Object[]{httpUrl, httpResult});
+            }
             String[] vals = content.split(";");
             String[] stockVals;
             StockExchangeData info;

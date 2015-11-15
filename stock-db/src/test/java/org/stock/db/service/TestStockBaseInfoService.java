@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.stock.db.bean.StockBaseInfo;
 import org.stock.db.common.StockType;
 import org.stock.db.util.SpringService;
@@ -49,10 +47,10 @@ public class TestStockBaseInfoService {
 	
 	private int getType(String typeStr) {
 		if(typeStr.endsWith("1")) {
-			return StockType.SH.getValue();
+			return StockType.STOCK.getValue();
 		}
 		else if(typeStr.endsWith("2")) {
-			return StockType.SZ.getValue();
+			return StockType.STOCK_INDEX.getValue();
 		}
 		
 		return -1;

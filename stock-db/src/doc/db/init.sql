@@ -10,7 +10,7 @@ CREATE TABLE stock_base_info (
   code        INT(6) UNSIGNED  NOT NULL DEFAULT 0
   COMMENT '股票代码',
   name        VARCHAR(16)      NOT NULL DEFAULT '',
-  type        TINYINT UNSIGNED NOT NULL DEFAULT 10,
+  type        TINYINT UNSIGNED NOT NULL DEFAULT 1,
   descp       VARCHAR(128)     NOT NULL DEFAULT '',
   record_time TIMESTAMP        NOT NULL DEFAULT current_timestamp ON UPDATE CURRENT_TIMESTAMP COMMENT '记录时间',
   PRIMARY KEY pk_id(id),
@@ -26,7 +26,7 @@ CREATE TABLE stock_exchange_info (
   id                 INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   code               INT(6) UNSIGNED  NOT NULL DEFAULT 0
   COMMENT '股票代码',
-  type               TINYINT UNSIGNED NOT NULL DEFAULT 10,
+  type               TINYINT UNSIGNED NOT NULL DEFAULT 1,
   open               DECIMAL(8, 3)    NOT NULL DEFAULT 0.00,
   hight              DECIMAL(8, 3)    NOT NULL DEFAULT 0.00,
   low                DECIMAL(8, 3)    NOT NULL DEFAULT 0.00,
@@ -55,7 +55,7 @@ CREATE TABLE stock_ma (
   id          INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   code        INT(6) UNSIGNED  NOT NULL DEFAULT 0
   COMMENT '股票代码',
-  type        TINYINT UNSIGNED NOT NULL DEFAULT 10,
+  type        TINYINT UNSIGNED NOT NULL DEFAULT 1,
   close       DECIMAL(8, 3)    NOT NULL DEFAULT 0.00
   COMMENT '当天收盘价',
   ma5         DECIMAL(8, 3)    NOT NULL DEFAULT 0.00
@@ -88,7 +88,7 @@ CREATE TABLE stock_deal_statistics_m (
   id                 INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   code               INT(6) UNSIGNED  NOT NULL DEFAULT 0
   COMMENT '股票代码',
-  type               TINYINT UNSIGNED NOT NULL DEFAULT 10
+  type               TINYINT UNSIGNED NOT NULL DEFAULT 1
   COMMENT '股票类型',
   open_price         DECIMAL(8, 3)    NOT NULL DEFAULT 0.000
   COMMENT '当月股票开盘价',
@@ -130,7 +130,7 @@ CREATE TABLE stock_deal_statistics_y (
   id                 INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   code               INT(6) UNSIGNED  NOT NULL DEFAULT 0
   COMMENT '股票代码',
-  type               TINYINT UNSIGNED NOT NULL DEFAULT 10
+  type               TINYINT UNSIGNED NOT NULL DEFAULT 1
   COMMENT '股票类型',
   open_price         DECIMAL(8, 3)    NOT NULL DEFAULT 0.000
   COMMENT '当月股票开盘价',

@@ -6,8 +6,8 @@ http://basic.10jqka.com.cn/
 
 日K线
 http://d.10jqka.com.cn/v2/realhead/hs_600868/last.js
-http://d.10jqka.com.cn/v2/line/hs_600868/01/2014.js
-http://d.10jqka.com.cn/v2/line/hs_600868/01/2015.js
+http://d.10jqka.com.cn/v2/line/hs_600868/00/2014.js
+http://d.10jqka.com.cn/v2/line/hs_600868/00/2015.js
 
 周K线
 http://d.10jqka.com.cn/v2/line/hs_600868/11/last.js

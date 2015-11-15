@@ -13,7 +13,7 @@ public class StockExchangeData implements Serializable{
     private double hight;
     private double low;
     private double close;
-    private double volume;
+    private long volume;
     private double exchRate;
     private Date txDate;
 
@@ -68,11 +68,11 @@ public class StockExchangeData implements Serializable{
         this.close = close;
     }
 
-    public double getVolume() {
+    public long getVolume() {
         return volume;
     }
 
-    public void setVolume(double volume) {
+    public void setVolume(long volume) {
         this.volume = volume;
     }
 
