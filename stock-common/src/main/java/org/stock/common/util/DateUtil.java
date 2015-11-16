@@ -86,7 +86,14 @@ public final class DateUtil {
             return calendar.getTime();
         }
 
-        calendar.set(Calendar.DATE, -1);
+        calendar.add(Calendar.DATE, -1);
+        // 减去一天之后查看是否是周日
+        dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+        // 为0则是周日
+        if(dayOfWeek == 0) {
+            calendar.add(Calendar.DATE, -2);
+        }
+
         return calendar.getTime();
     }
 
