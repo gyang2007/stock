@@ -68,7 +68,7 @@ public final class DateUtil {
      * 获取最近的一个交易日期
      * @return
      */
-    public static Date getTheLastestExchDate() {
+    public static Date getLastestExchDate() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
@@ -634,6 +634,6 @@ public final class DateUtil {
     }
 
     public static void main(String[] args) {
-        System.out.println(DateFormatUtils.format(getTheLastestExchDate(), "yyyy-MM-dd"));
+        System.out.println(DateFormatUtils.format(getLastestExchDate(), "yyyy-MM-dd"));
     }
 }

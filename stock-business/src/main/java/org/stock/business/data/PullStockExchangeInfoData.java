@@ -74,7 +74,7 @@ public class PullStockExchangeInfoData {
         StockExchangeInfo stockExchangeInfoInDb;
         List<StockExchangeData> stockExchangeDatas;
         Date startDate;
-        Date lastestExchDate = DateUtil.getTheLastestExchDate();
+        Date lastestExchDate = DateUtil.getLastestExchDate();
         int lastestExchDateIntValue = Integer.valueOf(DateFormatUtils.format(lastestExchDate, "yyyyMMdd")).intValue();
         LOGGER.info("The lastest exchange date = {}, int value: {}", new Object[]{DateFormatUtils.format(lastestExchDate, "yyyy-MM-dd"), lastestExchDateIntValue});
         double lastClose = 0.0; // 上一个交易日收盘价格
