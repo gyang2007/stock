@@ -105,10 +105,10 @@ public class PullStockExchangeInfoData {
             }
 
             stockExchangeDatas = pull(stockBaseInfo, stockExchangeInfoInDb);
+            stockExchangeDatas = TX_DATE_ORDERING_DESC.sortedCopy(stockExchangeDatas);
+            stockExchangeDatas = filter(stockExchangeDatas, startDate);
             LOGGER.info("Pull stockExchangeDatas count: {}, code = {}, type = {}, startDate = {}", new Object[]{stockExchangeDatas.size(), stockBaseInfo.getCode(), stockBaseInfo.getType(), DateFormatUtils.format(startDate, "yyyy-MM-dd")});
             if(CollectionUtils.isNotEmpty(stockExchangeDatas)) {
-                stockExchangeDatas = TX_DATE_ORDERING_DESC.sortedCopy(stockExchangeDatas);
-                stockExchangeDatas = filter(stockExchangeDatas, startDate);
                 for(StockExchangeData stockExchangeData : stockExchangeDatas) {
                     stockExchangeInfo = new StockExchangeInfo();
                     stockExchangeInfos.add(stockExchangeInfo);
