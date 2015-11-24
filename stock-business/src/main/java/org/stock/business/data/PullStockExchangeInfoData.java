@@ -175,7 +175,7 @@ public class PullStockExchangeInfoData {
             stockExchangeDatas.addAll(fetchStockExchangeService.pullStockExchangeDatas(stockBaseInfo.getCode(), stockBaseInfo.getType(), yearTmp));
             yearTmp++;
             try {
-                TimeUnit.MILLISECONDS.sleep(1);
+                TimeUnit.MILLISECONDS.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -230,13 +230,14 @@ public class PullStockExchangeInfoData {
             }
         });
         stockBaseInfos = ordering.sortedCopy(stockBaseInfos);
-        pull.pull(stockBaseInfos);
 
-/*        for(StockBaseInfo stockBaseInfo : stockBaseInfos) {
-            if(stockBaseInfo.getCode() == 601985 && stockBaseInfo.getType() == StockType.STOCK.getValue()) {
+        for(StockBaseInfo stockBaseInfo : stockBaseInfos) {
+            if(stockBaseInfo.getCode() > 2322) {
                 pull.pull(stockBaseInfo);
             }
-        }*/
+        }
+
+//        pull.pull(stockBaseInfos);
     }
 
     // 开启过多线程导致HTTP请求获取异常结果

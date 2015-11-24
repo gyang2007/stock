@@ -1,10 +1,13 @@
-package org.stock.analysis;
+package org.stock.analysis.main;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Ordering;
 import com.google.common.math.DoubleMath;
+import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.stock.analysis.service.IStockFluctuationSdService;
+import org.stock.analysis.service.impl.StockFluctuationSdServiceImpl;
 import org.stock.common.bean.StockExchangeInfo;
 
 import java.util.List;
@@ -18,6 +21,8 @@ public class Analysis1 {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Analysis1.class);
 
+    private IStockFluctuationSdService sdService = new StockFluctuationSdServiceImpl();
+
     // 按照交易时间升叙排列
     private final Ordering<StockExchangeInfo> TX_DATE_ORDERING_DESC = Ordering.natural().onResultOf(new Function<StockExchangeInfo, Comparable>() {
         @Override
@@ -30,19 +35,16 @@ public class Analysis1 {
         }
     });
 
+    public void process() {
+
+    }
+
     public void process(List<StockExchangeInfo> stockExchangeInfos) {
         List<StockExchangeInfo> infos = TX_DATE_ORDERING_DESC.sortedCopy(stockExchangeInfos);
-        double[] doubles = new double[infos.size()];
-        StockExchangeInfo info;
-        for(int i = 0; i < infos.size(); i++) {
-            doubles[i] = infos.get(i).getClose();
-        }
+        double standardValue = sdService.standardDeviation(infos);
+    }
 
-        // 平均收盘价格
-        double meanVal = DoubleMath.mean(doubles);
-
-        // 每一天收盘价于平均收盘价的比值
-
-        // 比值的标准差
+    public static void main(String[] args) {
+        new Analysis1().process();
     }
 }

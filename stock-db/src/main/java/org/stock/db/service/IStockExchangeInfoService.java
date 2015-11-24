@@ -19,4 +19,5 @@ public interface IStockExchangeInfoService {
 	 */
 	List<StockExchangeInfo> selectMaxDate();
 	int updateTypeByCode(StockExchangeInfo info);
+	List<StockExchangeInfo> selectByCodeTypeTxDate(StockExchangeInfo info);
 }

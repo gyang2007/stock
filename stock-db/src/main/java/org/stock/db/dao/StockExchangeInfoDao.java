@@ -14,30 +14,34 @@ public class StockExchangeInfoDao {
 	}
 	
 	public void saveStockExchangeInfo(StockExchangeInfo info) {
-		this.sqlSession.insert("org.stock.db.bean.StockExchangeInfo.insert", info);
+		this.sqlSession.insert("StockExchangeInfo.insert", info);
 	}
 	
 	public void saveStockExchangeInfoList(List<StockExchangeInfo> infos) {
-		this.sqlSession.insert("org.stock.db.bean.StockExchangeInfo.insertBatch", infos);
+		this.sqlSession.insert("StockExchangeInfo.insertBatch", infos);
 	}
 	
 	public StockExchangeInfo selectByCodeFomMaxDate(StockBaseInfo info) {
-		return (StockExchangeInfo) this.sqlSession.selectOne("org.stock.db.bean.StockExchangeInfo.selectByCodeFomMaxDate", info);
+		return (StockExchangeInfo) this.sqlSession.selectOne("StockExchangeInfo.selectByCodeFomMaxDate", info);
 	}
 
 	public StockExchangeInfo selectByCodeTypeFomMaxDate(StockBaseInfo info) {
-		return (StockExchangeInfo) this.sqlSession.selectOne("org.stock.db.bean.StockExchangeInfo.selectByCodeTypeFomMaxDate", info);
+		return (StockExchangeInfo) this.sqlSession.selectOne("StockExchangeInfo.selectByCodeTypeFomMaxDate", info);
 	}
 	
 	public StockExchangeInfo selectByCodeType(StockBaseInfo info) {
-		return (StockExchangeInfo) this.sqlSession.selectOne("org.stock.db.bean.StockExchangeInfo.selectByCodeType", info);
+		return (StockExchangeInfo) this.sqlSession.selectOne("StockExchangeInfo.selectByCodeType", info);
 	}
 	
 	public List<StockExchangeInfo> selectMaxDate() {
-		return this.sqlSession.selectList("org.stock.db.bean.StockExchangeInfo.selectMaxDate");
+		return this.sqlSession.selectList("StockExchangeInfo.selectMaxDate");
 	}
 
     public int updateTypeByCode(StockExchangeInfo info) {
-        return this.sqlSession.update("org.stock.db.bean.StockExchangeInfo.updateTypeByCode", info);
+        return this.sqlSession.update("StockExchangeInfo.updateTypeByCode", info);
     }
+
+	public List<StockExchangeInfo> selectByCodeTypeTxDate(StockExchangeInfo info) {
+		return this.sqlSession.selectList("StockExchangeInfo.selectByCodeTypeTxDate", info);
+	}
 }

@@ -13,22 +13,22 @@ public class StockBaseInfoDao {
 	}
 	
 	public void saveStockBaseInfo(StockBaseInfo info) {
-		this.sqlSession.insert("org.stock.db.bean.StockBaseInfo.insert", info);
+		this.sqlSession.insert("StockBaseInfo.insert", info);
 	}
 	
 	public void saveStockBaseInfo(List<StockBaseInfo> infos) {
-		this.sqlSession.insert("org.stock.db.bean.StockBaseInfo.insertBatch", infos);
+		this.sqlSession.insert("StockBaseInfo.insertBatch", infos);
 	}
 	
 	public List<StockBaseInfo> selectAllStockBaseInfoList() {
-		return this.sqlSession.selectList("org.stock.db.bean.StockBaseInfo.selectAll");
+		return this.sqlSession.selectList("StockBaseInfo.selectAll");
 	}
 	
 	public List<StockBaseInfo> selectStockBaseInfoListByType(int type) {
-		return this.sqlSession.selectList("org.stock.db.bean.StockBaseInfo.selectByType", type);
+		return this.sqlSession.selectList("StockBaseInfo.selectByType", type);
 	}
 
 	public StockBaseInfo selectStockBaseInfoById(int id) {
-		return this.sqlSession.selectOne("org.stock.db.bean.StockBaseInfo.selectById", id);
+		return this.sqlSession.selectOne("StockBaseInfo.selectById", id);
 	}
 }

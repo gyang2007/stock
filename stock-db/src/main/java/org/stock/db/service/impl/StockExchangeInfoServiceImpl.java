@@ -51,4 +51,9 @@ public class StockExchangeInfoServiceImpl implements IStockExchangeInfoService {
     public int updateTypeByCode(StockExchangeInfo info) {
         return stockExchangeInfoDao.updateTypeByCode(info);
     }
+
+	@Override
+	public List<StockExchangeInfo> selectByCodeTypeTxDate(StockExchangeInfo info) {
+		return stockExchangeInfoDao.selectByCodeTypeTxDate(info);
+	}
 }
