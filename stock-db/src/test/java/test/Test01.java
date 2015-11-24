@@ -1,7 +1,7 @@
 package test;
 
 import org.junit.Test;
-import org.stock.db.bean.StockExchangeInfo;
+import org.stock.common.bean.StockExchangeInfo;
 import org.stock.db.service.IStockExchangeInfoService;
 import org.stock.db.util.SpringService;
 

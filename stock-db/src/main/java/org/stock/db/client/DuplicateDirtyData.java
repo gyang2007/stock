@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.time.DateFormatUtils;
-import org.stock.db.bean.StockExchangeInfo;
+import org.stock.common.bean.StockExchangeInfo;
 import org.stock.db.util.DBUtil;
 
 public class DuplicateDirtyData {

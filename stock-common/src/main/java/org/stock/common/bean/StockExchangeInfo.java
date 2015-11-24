@@ -1,4 +1,4 @@
-package org.stock.db.bean;
+package org.stock.common.bean;
 
 import java.io.Serializable;
 import java.util.Date;

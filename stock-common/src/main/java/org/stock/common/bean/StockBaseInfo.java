@@ -1,4 +1,4 @@
-package org.stock.db.bean;
+package org.stock.common.bean;
 
 import org.apache.commons.lang.StringUtils;
 

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
-import org.stock.db.bean.StockBaseInfo;
+import org.stock.common.bean.StockBaseInfo;
 import org.stock.db.common.StockType;
 import org.stock.db.util.SpringService;
 

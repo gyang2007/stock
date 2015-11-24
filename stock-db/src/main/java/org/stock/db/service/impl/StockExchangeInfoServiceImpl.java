@@ -1,12 +1,12 @@
 package org.stock.db.service.impl;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
-import org.stock.db.bean.StockBaseInfo;
-import org.stock.db.bean.StockExchangeInfo;
+import org.stock.common.bean.StockBaseInfo;
+import org.stock.common.bean.StockExchangeInfo;
 import org.stock.db.dao.StockExchangeInfoDao;
 import org.stock.db.service.IStockExchangeInfoService;
+
+import java.util.List;
 
 @Service(value = "stockExchangeInfoService")
 public class StockExchangeInfoServiceImpl implements IStockExchangeInfoService {

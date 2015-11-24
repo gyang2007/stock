@@ -1,9 +1,10 @@
 package org.stock.db.service;
 
+import org.stock.common.bean.StockBaseInfo;
+import org.stock.common.bean.StockExchangeInfo;
+
 import java.util.List;
 
-import org.stock.db.bean.StockBaseInfo;
-import org.stock.db.bean.StockExchangeInfo;
 
 public interface IStockExchangeInfoService {
 	void saveStockExchangeInfo(StockExchangeInfo info);

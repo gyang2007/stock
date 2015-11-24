@@ -3,8 +3,8 @@ package org.stock.db.dao;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
-import org.stock.db.bean.StockBaseInfo;
-import org.stock.db.bean.StockExchangeInfo;
+import org.stock.common.bean.StockBaseInfo;
+import org.stock.common.bean.StockExchangeInfo;
 
 public class StockExchangeInfoDao {
 	private SqlSession sqlSession;

@@ -3,7 +3,7 @@ package org.stock.db.service;
 import java.util.List;
 
 import com.google.common.io.LineReader;
-import org.stock.db.bean.StockBaseInfo;
+import org.stock.common.bean.StockBaseInfo;
 import org.stock.db.common.StockType;
 
 public interface IStockBaseInfoService {

@@ -3,7 +3,7 @@ package org.stock.db.service.impl;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.stock.db.bean.StockBaseInfo;
+import org.stock.common.bean.StockBaseInfo;
 import org.stock.db.common.StockType;
 import org.stock.db.dao.StockBaseInfoDao;
 import org.stock.db.service.IStockBaseInfoService;

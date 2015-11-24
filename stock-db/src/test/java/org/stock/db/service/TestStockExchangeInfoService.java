@@ -9,8 +9,8 @@ import org.apache.commons.lang.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
-import org.stock.db.bean.StockBaseInfo;
-import org.stock.db.bean.StockExchangeInfo;
+import org.stock.common.bean.StockBaseInfo;
+import org.stock.common.bean.StockExchangeInfo;
 import org.stock.db.common.StockType;
 import org.stock.db.util.SpringService;
 
