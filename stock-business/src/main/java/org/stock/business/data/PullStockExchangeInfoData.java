@@ -73,7 +73,9 @@ public class PullStockExchangeInfoData {
 	public void pull(List<StockBaseInfo> stockBaseInfos) {
         StockExchangeInfo stockExchangeInfoInDb;
         List<StockExchangeData> stockExchangeDatas;
+        // 获取股票交易数据的开始日期
         Date startDate;
+        // 获取最近的股票交易日期
         Date lastestExchDate = DateUtil.getLastestExchDate();
         int lastestExchDateIntValue = Integer.valueOf(DateFormatUtils.format(lastestExchDate, "yyyyMMdd")).intValue();
         LOGGER.info("The lastest exchange date = {}, int value: {}", new Object[]{DateFormatUtils.format(lastestExchDate, "yyyy-MM-dd"), lastestExchDateIntValue});
@@ -85,6 +87,7 @@ public class PullStockExchangeInfoData {
             stopWatch = new StopWatch();
             stopWatch.start();
             LOGGER.info("Start pull exchange data, code = {}, type = {}", new Object[]{stockBaseInfo.getCode(), stockBaseInfo.getType()});
+            stockExchangeDatas = Lists.newArrayList();
             stockExchangeInfos = Lists.newArrayList();
             lastClose = 0.0;
             startDate = Constant.VALID_DATE_START;
@@ -94,18 +97,28 @@ public class PullStockExchangeInfoData {
             if(stockExchangeInfoInDb != null) {
                 // 上一交易日收盘价
                 lastClose = stockExchangeInfoInDb.getClose();
-                // 最小交易日期startDate
-                startDate = DateUtils.addDays(stockExchangeInfoInDb.getTxDate(), 1);
-
-                // 最小交易日期大于等于当前日期，则不获取最新数据
-                if(Integer.valueOf(DateFormatUtils.format(startDate, "yyyyMMdd")).intValue() >= lastestExchDateIntValue) {
-                    LOGGER.info("The stock has the newest exchange data, code = {}, type = {}", new Object[]{stockBaseInfo.getCode(), stockBaseInfo.getType()});
-                    continue;
-                }
+                // 获取股票交易数据的开始日期 startDate
+                startDate = DateUtil.getNextExchDate(stockExchangeInfoInDb.getTxDate());
             }
 
-            stockExchangeDatas = pull(stockBaseInfo, stockExchangeInfoInDb);
-            stockExchangeDatas = TX_DATE_ORDERING_DESC.sortedCopy(stockExchangeDatas);
+
+            int tmpDateValue = Integer.valueOf(DateFormatUtils.format(startDate, "yyyyMMdd")).intValue();
+            // 获取股票数据的开始日期大于最近一个股票交易日，则不获取最新数据
+            if(tmpDateValue > lastestExchDateIntValue) {
+                LOGGER.info("The stock has the newest exchange data, code = {}, type = {}", new Object[]{stockBaseInfo.getCode(), stockBaseInfo.getType()});
+                continue;
+            }
+            // 获取股票数据的开始日期等于最近一个股票交易日，则获取最新一天的交易数据
+            else if(tmpDateValue == lastestExchDateIntValue) {
+                StockExchangeData tmpData = pullToday(stockBaseInfo);
+                if(tmpData != null) {
+                    stockExchangeDatas.add(tmpData);
+                }
+            } else {
+                stockExchangeDatas = pull(stockBaseInfo, stockExchangeInfoInDb);
+                stockExchangeDatas = TX_DATE_ORDERING_DESC.sortedCopy(stockExchangeDatas);
+            }
+
             stockExchangeDatas = filter(stockExchangeDatas, startDate);
             LOGGER.info("Pull stockExchangeDatas count: {}, code = {}, type = {}, startDate = {}", new Object[]{stockExchangeDatas.size(), stockBaseInfo.getCode(), stockBaseInfo.getType(), DateFormatUtils.format(startDate, "yyyy-MM-dd")});
             if(CollectionUtils.isNotEmpty(stockExchangeDatas)) {
@@ -185,6 +198,10 @@ public class PullStockExchangeInfoData {
         return stockExchangeDatas;
     }
 
+    private StockExchangeData pullToday(StockBaseInfo stockBaseInfo) {
+        return fetchStockExchangeService.pullStockExchangeDataToday(stockBaseInfo.getCode(), stockBaseInfo.getType());
+    }
+
     private void save(List<StockExchangeInfo> infos) {
         try {
             exchangeInfoService.saveStockExchangeInfoList(infos);
@@ -195,7 +212,7 @@ public class PullStockExchangeInfoData {
     }
 
     /**
-     * 根据开始交易日期过滤交易数据
+     * 根据获取股票交易数据的开始日期过滤交易数据
      *
      * @param stockExchangeDatas
      * @param startDate
@@ -209,10 +226,6 @@ public class PullStockExchangeInfoData {
                 return stockExchangeData.getTxDate().equals(startDate) || stockExchangeData.getTxDate().after(startDate);
             }
         }));
-    }
-
-    private String formatterTxDate(Date date) {
-        return DateFormatUtils.format(date, "yyyy-MM-dd");
     }
 
 	public static void main(String[] args) throws ParseException {
@@ -231,13 +244,13 @@ public class PullStockExchangeInfoData {
         });
         stockBaseInfos = ordering.sortedCopy(stockBaseInfos);
 
-        for(StockBaseInfo stockBaseInfo : stockBaseInfos) {
+/*        for(StockBaseInfo stockBaseInfo : stockBaseInfos) {
             if(stockBaseInfo.getCode() > 2322) {
                 pull.pull(stockBaseInfo);
             }
-        }
+        }*/
 
-//        pull.pull(stockBaseInfos);
+        pull.pull(stockBaseInfos);
     }
 
     // 开启过多线程导致HTTP请求获取异常结果

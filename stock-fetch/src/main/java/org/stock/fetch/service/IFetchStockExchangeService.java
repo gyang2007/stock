@@ -20,4 +20,13 @@ public interface IFetchStockExchangeService {
      * @return
      */
     List<StockExchangeData> pullStockExchangeDatas(int code, int type, int year);
+
+    /**
+     * 获取当日交易信息
+     *
+     * @param code 代码
+     * @param type 类型
+     * @return
+     */
+    StockExchangeData pullStockExchangeDataToday(int code, int type);
 }

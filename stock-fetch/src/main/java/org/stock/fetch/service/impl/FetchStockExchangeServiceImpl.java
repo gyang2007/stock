@@ -1,5 +1,7 @@
 package org.stock.fetch.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.io.LineReader;
@@ -18,7 +20,6 @@ import org.stock.fetch.bean.StockExchangeData;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -35,6 +36,8 @@ public class FetchStockExchangeServiceImpl extends AbstractFetchStockExchange {
 
     // eg: http://d.10jqka.com.cn/v2/line/hs_600868/00/2015.js
     private static final String URL_FORMATTER = "http://d.10jqka.com.cn/v2/line/hs_%s/00/%s.js";
+    // eg: http://d.10jqka.com.cn/v2/line/hs_600868/00/today.js
+    private static final String URL_FORMATTER_TODAY = "http://d.10jqka.com.cn/v2/line/hs_%s/00/today.js";
 
     private static final Set<String> DUPLICATE_SET = Sets.newHashSet();
 
@@ -160,6 +163,62 @@ public class FetchStockExchangeServiceImpl extends AbstractFetchStockExchange {
         return stockExchangeDatas;
     }
 
+    /**
+     * 从同花顺API获取股票当日交易数据
+     *
+     * @param code
+     * @param type
+     * @return
+     */
+    /**
+     {
+     "1": "20151125",   // 日期
+     "7": "13.55",      // 开盘价格
+     "8": "13.83",      // 最高价格
+     "9": "13.32",      // 最低价格
+     "11": "13.69",     // 收盘价格
+     "13": 42527988,    // 成交量（股）
+     "19": "578656920.00",
+     "1968584": "5.759",    // 换手率
+     "open": 1,
+     "dt": "0013",
+     "name": "晋亿实业"
+     }
+     */
+    public StockExchangeData pullStockExchangeDataToday(int code, int type) {
+        String codeStr = StringUtils.leftPad(String.valueOf(code), 6, '0');
+        String httpUrl = String.format(URL_FORMATTER_TODAY, codeStr);
+        String httpResult = httpGet(httpUrl);
+        if(StringUtils.isNotEmpty(httpResult)) {
+            String content = StringUtils.substringBetween(httpResult, "\":", "})");
+            if(content == null) {
+                LOGGER.error("null null null, httpUrl = {}, httpResult = {}", new Object[]{httpUrl, httpResult});
+            }
+
+            try {
+                JSONObject contentJSON = JSON.parseObject(content);
+                if(contentJSON != null) {
+                    StockExchangeData stockExchangeData = new StockExchangeData();
+                    stockExchangeData.setCode(code);
+                    stockExchangeData.setType(type);
+                    stockExchangeData.setOpen(contentJSON.getDouble("7"));
+                    stockExchangeData.setHight(contentJSON.getDouble("8"));
+                    stockExchangeData.setLow(contentJSON.getDouble("9"));
+                    stockExchangeData.setClose(contentJSON.getDouble("11"));
+                    stockExchangeData.setVolume(contentJSON.getLong("13"));
+                    stockExchangeData.setExchRate(contentJSON.getDouble("1968584"));
+                    stockExchangeData.setTxDate(DateUtils.parseDate(contentJSON.getString("1"), new String[]{"yyyyMMdd"}));
+
+                    return stockExchangeData;
+                }
+            } catch (Exception e) {
+                LOGGER.error("Error!!! code = " + code + ", type = " + type + ", val = " + content, e);
+            }
+        }
+
+        return null;
+    }
+
     private String httpGet(String httpUrl) {
         CloseableHttpClient httpClient = null;
         try {
@@ -204,7 +263,10 @@ public class FetchStockExchangeServiceImpl extends AbstractFetchStockExchange {
 
     public static void main(String[] args) {
 //        new FetchStockExchangeServiceImpl().process();
-        List<StockExchangeData> lists = new FetchStockExchangeServiceImpl().pullStockExchangeDatas(651, 20, 2015);
-        System.out.println(lists);
+/*        List<StockExchangeData> lists = new FetchStockExchangeServiceImpl().pullStockExchangeDatas(651, 20, 2015);
+        System.out.println(lists);*/
+
+        StockExchangeData stockExchangeData = new FetchStockExchangeServiceImpl().pullStockExchangeDataToday(651, 1);
+        System.out.println(stockExchangeData);
     }
 }

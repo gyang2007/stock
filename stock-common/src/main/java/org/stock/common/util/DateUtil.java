@@ -1,6 +1,7 @@
 package org.stock.common.util;
 
 import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.commons.lang.time.DateUtils;
 
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
@@ -76,7 +77,7 @@ public final class DateUtil {
             dayOfWeek = 7;
         }
 
-        // 如果周末，则选找最近的周五作为最近的交易日期
+        // 如果周末，则寻找最近的周五作为最近的交易日期
         if(dayOfWeek == 6 || dayOfWeek == 7) {
             calendar.add(Calendar.DATE, 5 - dayOfWeek);
         }
@@ -92,6 +93,30 @@ public final class DateUtil {
         // 为0则是周日
         if(dayOfWeek == 0) {
             calendar.add(Calendar.DATE, -2);
+        }
+
+        return calendar.getTime();
+    }
+
+    /**
+     * 获取下一个股票交易日期
+     *
+     * @param currentExchDate
+     * @return
+     */
+    public static Date getNextExchDate(Date currentExchDate) {
+        Date nextDate = DateUtils.addDays(currentExchDate, 1);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(nextDate);
+        // 获取具体周几
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+        if(dayOfWeek == 0) {
+            dayOfWeek = 7;
+        }
+
+        // 如果周末，则选择下周一日期
+        if(dayOfWeek == 6 || dayOfWeek == 7) {
+            calendar.add(Calendar.DATE, 8 - dayOfWeek);
         }
 
         return calendar.getTime();
