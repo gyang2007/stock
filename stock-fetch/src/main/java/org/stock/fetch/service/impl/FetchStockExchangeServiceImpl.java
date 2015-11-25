@@ -99,7 +99,7 @@ public class FetchStockExchangeServiceImpl extends AbstractFetchStockExchange {
     }
 
     @Override
-    public List<StockExchangeData> pullStockExchangeDatas(int code, int type, int year) {
+    public List<StockExchangeData> pullStockExchangeDatas(int code, int type, int year) throws Exception {
         List<StockExchangeData> stockExchangeDatas = Lists.newArrayList();
         String codeStr = StringUtils.leftPad(String.valueOf(code), 6, '0');
         String httpUrl = String.format(URL_FORMATTER, codeStr, year);
@@ -155,6 +155,7 @@ public class FetchStockExchangeServiceImpl extends AbstractFetchStockExchange {
                         info.setTxDate(DateUtils.parseDate(stockVals[0], new String[]{"yyyyMMdd"}));    // tx_date
                     } catch (Exception e) {
                         LOGGER.error("Error!!! code = " + code + ", type = " + type + ", val = " + val, e);
+                        throw new Exception("获取股票交易数据异常", e);
                     }
                 }
             }
@@ -185,7 +186,7 @@ public class FetchStockExchangeServiceImpl extends AbstractFetchStockExchange {
      "name": "晋亿实业"
      }
      */
-    public StockExchangeData pullStockExchangeDataToday(int code, int type) {
+    public StockExchangeData pullStockExchangeDataToday(int code, int type) throws Exception {
         String codeStr = StringUtils.leftPad(String.valueOf(code), 6, '0');
         String httpUrl = String.format(URL_FORMATTER_TODAY, codeStr);
         String httpResult = httpGet(httpUrl);
@@ -213,6 +214,7 @@ public class FetchStockExchangeServiceImpl extends AbstractFetchStockExchange {
                 }
             } catch (Exception e) {
                 LOGGER.error("Error!!! code = " + code + ", type = " + type + ", val = " + content, e);
+                throw new Exception("获取股票交易数据异常", e);
             }
         }
 
@@ -261,7 +263,7 @@ public class FetchStockExchangeServiceImpl extends AbstractFetchStockExchange {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 //        new FetchStockExchangeServiceImpl().process();
 /*        List<StockExchangeData> lists = new FetchStockExchangeServiceImpl().pullStockExchangeDatas(651, 20, 2015);
         System.out.println(lists);*/

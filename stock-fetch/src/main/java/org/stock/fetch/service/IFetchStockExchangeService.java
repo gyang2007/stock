@@ -19,7 +19,7 @@ public interface IFetchStockExchangeService {
      * @param year 年份
      * @return
      */
-    List<StockExchangeData> pullStockExchangeDatas(int code, int type, int year);
+    List<StockExchangeData> pullStockExchangeDatas(int code, int type, int year) throws Exception;
 
     /**
      * 获取当日交易信息
@@ -28,5 +28,5 @@ public interface IFetchStockExchangeService {
      * @param type 类型
      * @return
      */
-    StockExchangeData pullStockExchangeDataToday(int code, int type);
+    StockExchangeData pullStockExchangeDataToday(int code, int type) throws Exception;
 }

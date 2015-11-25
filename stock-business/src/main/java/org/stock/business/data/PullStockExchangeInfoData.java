@@ -84,83 +84,86 @@ public class PullStockExchangeInfoData {
         StockExchangeInfo stockExchangeInfo;
         StopWatch stopWatch;
 		for(StockBaseInfo stockBaseInfo : stockBaseInfos) {
-            stopWatch = new StopWatch();
-            stopWatch.start();
-            LOGGER.info("Start pull exchange data, code = {}, type = {}", new Object[]{stockBaseInfo.getCode(), stockBaseInfo.getType()});
-            stockExchangeDatas = Lists.newArrayList();
-            stockExchangeInfos = Lists.newArrayList();
-            lastClose = 0.0;
-            startDate = Constant.VALID_DATE_START;
+            try {
+                stopWatch = new StopWatch();
+                stopWatch.start();
+                LOGGER.info("Start pull exchange data, code = {}, type = {}", new Object[]{stockBaseInfo.getCode(), stockBaseInfo.getType()});
+                stockExchangeDatas = Lists.newArrayList();
+                stockExchangeInfos = Lists.newArrayList();
+                lastClose = 0.0;
+                startDate = Constant.VALID_DATE_START;
 
-            stockExchangeInfoInDb = exchangeInfoService.selectByCodeTypeFomMaxDate(stockBaseInfo);
-            // 如果数据库中有交易记录，则计算上一交易日收盘价和将要获取交易数据的最小交易日期
-            if(stockExchangeInfoInDb != null) {
-                // 上一交易日收盘价
-                lastClose = stockExchangeInfoInDb.getClose();
-                // 获取股票交易数据的开始日期 startDate
-                startDate = DateUtil.getNextExchDate(stockExchangeInfoInDb.getTxDate());
-            }
-
-
-            int tmpDateValue = Integer.valueOf(DateFormatUtils.format(startDate, "yyyyMMdd")).intValue();
-            // 获取股票数据的开始日期大于最近一个股票交易日，则不获取最新数据
-            if(tmpDateValue > lastestExchDateIntValue) {
-                LOGGER.info("The stock has the newest exchange data, code = {}, type = {}", new Object[]{stockBaseInfo.getCode(), stockBaseInfo.getType()});
-                continue;
-            }
-            // 获取股票数据的开始日期等于最近一个股票交易日，则获取最新一天的交易数据
-            else if(tmpDateValue == lastestExchDateIntValue) {
-                StockExchangeData tmpData = pullToday(stockBaseInfo);
-                if(tmpData != null) {
-                    stockExchangeDatas.add(tmpData);
+                stockExchangeInfoInDb = exchangeInfoService.selectByCodeTypeFomMaxDate(stockBaseInfo);
+                // 如果数据库中有交易记录，则计算上一交易日收盘价和将要获取交易数据的最小交易日期
+                if(stockExchangeInfoInDb != null) {
+                    // 上一交易日收盘价
+                    lastClose = stockExchangeInfoInDb.getClose();
+                    // 获取股票交易数据的开始日期 startDate
+                    startDate = DateUtil.getNextExchDate(stockExchangeInfoInDb.getTxDate());
                 }
-            } else {
-                stockExchangeDatas = pull(stockBaseInfo, stockExchangeInfoInDb);
-                stockExchangeDatas = TX_DATE_ORDERING_DESC.sortedCopy(stockExchangeDatas);
-            }
 
-            stockExchangeDatas = filter(stockExchangeDatas, startDate);
-            LOGGER.info("Pull stockExchangeDatas count: {}, code = {}, type = {}, startDate = {}", new Object[]{stockExchangeDatas.size(), stockBaseInfo.getCode(), stockBaseInfo.getType(), DateFormatUtils.format(startDate, "yyyy-MM-dd")});
-            if(CollectionUtils.isNotEmpty(stockExchangeDatas)) {
-                for(StockExchangeData stockExchangeData : stockExchangeDatas) {
-                    stockExchangeInfo = new StockExchangeInfo();
-                    stockExchangeInfos.add(stockExchangeInfo);
-                    stockExchangeInfo.setCode(stockBaseInfo.getCode());
-                    stockExchangeInfo.setType(stockBaseInfo.getType());
-                    stockExchangeInfo.setOpen(stockExchangeData.getOpen()); // open
-                    stockExchangeInfo.setHight(stockExchangeData.getHight());    // high
-                    stockExchangeInfo.setLow(stockExchangeData.getLow());  // low
-                    stockExchangeInfo.setClose(stockExchangeData.getClose()); // close
-                    stockExchangeInfo.setVolume(stockExchangeData.getVolume());
-                    stockExchangeInfo.setExchRate(stockExchangeData.getExchRate());
-                    stockExchangeInfo.setTxDate(stockExchangeData.getTxDate());
-                    // 涨跌幅
-                    double priceChange = 0.0;
-                    // 振幅
-                    double totalPriceChange = 0.0;
-                    if(lastClose != 0.0) {
-                        priceChange = Double.valueOf(DECIMAL_FORMAT.format((stockExchangeData.getClose() - lastClose) / lastClose * 100.0));
-                        totalPriceChange = Double.valueOf(DECIMAL_FORMAT.format((stockExchangeData.getHight() - stockExchangeData.getLow()) / lastClose * 100.0));
+                int tmpDateValue = Integer.valueOf(DateFormatUtils.format(startDate, "yyyyMMdd")).intValue();
+                // 获取股票数据的开始日期大于最近一个股票交易日，则不获取最新数据
+                if(tmpDateValue > lastestExchDateIntValue) {
+                    LOGGER.info("The stock has the newest exchange data, code = {}, type = {}", new Object[]{stockBaseInfo.getCode(), stockBaseInfo.getType()});
+                    continue;
+                }
+                // 获取股票数据的开始日期等于最近一个股票交易日，则获取最新一天的交易数据
+                else if(tmpDateValue == lastestExchDateIntValue) {
+                    StockExchangeData tmpData = pullToday(stockBaseInfo);
+                    if(tmpData != null) {
+                        stockExchangeDatas.add(tmpData);
                     }
-                    stockExchangeInfo.setPriceChange(priceChange);
-                    stockExchangeInfo.setTotalPriceChange(totalPriceChange);
+                } else {
+                    stockExchangeDatas = pull(stockBaseInfo, stockExchangeInfoInDb);
+                    stockExchangeDatas = TX_DATE_ORDERING_DESC.sortedCopy(stockExchangeDatas);
+                }
 
-                    lastClose = stockExchangeData.getClose();
+                stockExchangeDatas = filter(stockExchangeDatas, startDate);
+                LOGGER.info("Pull stockExchangeDatas count: {}, code = {}, type = {}, startDate = {}", new Object[]{stockExchangeDatas.size(), stockBaseInfo.getCode(), stockBaseInfo.getType(), DateFormatUtils.format(startDate, "yyyy-MM-dd")});
+                if(CollectionUtils.isNotEmpty(stockExchangeDatas)) {
+                    for(StockExchangeData stockExchangeData : stockExchangeDatas) {
+                        stockExchangeInfo = new StockExchangeInfo();
+                        stockExchangeInfos.add(stockExchangeInfo);
+                        stockExchangeInfo.setCode(stockBaseInfo.getCode());
+                        stockExchangeInfo.setType(stockBaseInfo.getType());
+                        stockExchangeInfo.setOpen(stockExchangeData.getOpen()); // open
+                        stockExchangeInfo.setHight(stockExchangeData.getHight());    // high
+                        stockExchangeInfo.setLow(stockExchangeData.getLow());  // low
+                        stockExchangeInfo.setClose(stockExchangeData.getClose()); // close
+                        stockExchangeInfo.setVolume(stockExchangeData.getVolume());
+                        stockExchangeInfo.setExchRate(stockExchangeData.getExchRate());
+                        stockExchangeInfo.setTxDate(stockExchangeData.getTxDate());
+                        // 涨跌幅
+                        double priceChange = 0.0;
+                        // 振幅
+                        double totalPriceChange = 0.0;
+                        if(lastClose != 0.0) {
+                            priceChange = Double.valueOf(DECIMAL_FORMAT.format((stockExchangeData.getClose() - lastClose) / lastClose * 100.0));
+                            totalPriceChange = Double.valueOf(DECIMAL_FORMAT.format((stockExchangeData.getHight() - stockExchangeData.getLow()) / lastClose * 100.0));
+                        }
+                        stockExchangeInfo.setPriceChange(priceChange);
+                        stockExchangeInfo.setTotalPriceChange(totalPriceChange);
 
-                    if(stockExchangeInfos.size() != 0 && stockExchangeInfos.size() % 10000 == 0) {
-                        save(stockExchangeInfos);
+                        lastClose = stockExchangeData.getClose();
+
+                        if(stockExchangeInfos.size() != 0 && stockExchangeInfos.size() % 10000 == 0) {
+                            save(stockExchangeInfos);
+                            LOGGER.info("Save stockExchangeInfos count: {}, code = {}, type = {}", new Object[]{stockExchangeInfos.size(), stockBaseInfo.getCode(), stockBaseInfo.getType()});
+                            stockExchangeInfos = Lists.newArrayList();
+                        }
+                    }
+
+                    if(!CollectionUtils.isEmpty(stockExchangeInfos)) {
                         LOGGER.info("Save stockExchangeInfos count: {}, code = {}, type = {}", new Object[]{stockExchangeInfos.size(), stockBaseInfo.getCode(), stockBaseInfo.getType()});
-                        stockExchangeInfos = Lists.newArrayList();
+                        save(stockExchangeInfos);
                     }
-                }
 
-                if(!CollectionUtils.isEmpty(stockExchangeInfos)) {
-                    LOGGER.info("Save stockExchangeInfos count: {}, code = {}, type = {}", new Object[]{stockExchangeInfos.size(), stockBaseInfo.getCode(), stockBaseInfo.getType()});
-                    save(stockExchangeInfos);
+                    stopWatch.stop();
+                    LOGGER.info("Pull the stock exchange data success, code = {}, type = {}, consume time = {}", new Object[]{stockBaseInfo.getCode(), stockBaseInfo.getType(), stopWatch.getTime()});
                 }
-
-                stopWatch.stop();
-                LOGGER.info("Pull the stock exchange data success, code = {}, type = {}, consume time = {}", new Object[]{stockBaseInfo.getCode(), stockBaseInfo.getType(), stopWatch.getTime()});
+            } catch (Exception e) {
+                LOGGER.error(String.format("获取数据异常, code = %s, type = %s", new Object[]{stockBaseInfo.getCode(), stockBaseInfo.getType()}), e);
             }
         }
 	}
@@ -171,7 +174,7 @@ public class PullStockExchangeInfoData {
      * @param stockExchangeInfo
      * @return
      */
-    private List<StockExchangeData> pull(StockBaseInfo stockBaseInfo, StockExchangeInfo stockExchangeInfo) {
+    private List<StockExchangeData> pull(StockBaseInfo stockBaseInfo, StockExchangeInfo stockExchangeInfo) throws Exception {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         int maxYear = calendar.get(Calendar.YEAR);
@@ -198,7 +201,7 @@ public class PullStockExchangeInfoData {
         return stockExchangeDatas;
     }
 
-    private StockExchangeData pullToday(StockBaseInfo stockBaseInfo) {
+    private StockExchangeData pullToday(StockBaseInfo stockBaseInfo) throws Exception {
         return fetchStockExchangeService.pullStockExchangeDataToday(stockBaseInfo.getCode(), stockBaseInfo.getType());
     }
 
@@ -244,13 +247,13 @@ public class PullStockExchangeInfoData {
         });
         stockBaseInfos = ordering.sortedCopy(stockBaseInfos);
 
-/*        for(StockBaseInfo stockBaseInfo : stockBaseInfos) {
-            if(stockBaseInfo.getCode() > 2322) {
+        for(StockBaseInfo stockBaseInfo : stockBaseInfos) {
+            if(stockBaseInfo.getCode() > 2014) {
                 pull.pull(stockBaseInfo);
             }
-        }*/
+        }
 
-        pull.pull(stockBaseInfos);
+//        pull.pull(stockBaseInfos);
     }
 
     // 开启过多线程导致HTTP请求获取异常结果
