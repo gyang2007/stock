@@ -26,9 +26,9 @@ import java.util.Map;
  *
  * Created by gyang on 15-11-25.
  */
-public class StockPriceStandardDeviation {
+public class StockPriceStandardDeviationAnalysis {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(StockPriceStandardDeviation.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(StockPriceStandardDeviationAnalysis.class);
 
     private final IStockBaseInfoService stockBaseInfoService = (IStockBaseInfoService) SpringService.getInstance().getService("stockBaseInfoService");
     private final IStockExchangeInfoService stockExchangeInfoService = (IStockExchangeInfoService) SpringService.getInstance().getService("stockExchangeInfoService");
@@ -81,6 +81,6 @@ public class StockPriceStandardDeviation {
     }
 
     public static void main(String[] args) {
-        new StockPriceStandardDeviation().process();
+        new StockPriceStandardDeviationAnalysis().process();
     }
 }
