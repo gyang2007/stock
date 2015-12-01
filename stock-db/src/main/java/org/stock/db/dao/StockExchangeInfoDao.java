@@ -29,8 +29,8 @@ public class StockExchangeInfoDao {
 		return (StockExchangeInfo) this.sqlSession.selectOne("StockExchangeInfo.selectByCodeTypeFomMaxDate", info);
 	}
 	
-	public StockExchangeInfo selectByCodeType(StockBaseInfo info) {
-		return (StockExchangeInfo) this.sqlSession.selectOne("StockExchangeInfo.selectByCodeType", info);
+	public List<StockExchangeInfo> selectByCodeType(StockBaseInfo info) {
+		return this.sqlSession.selectList("StockExchangeInfo.selectByCodeType", info);
 	}
 	
 	public List<StockExchangeInfo> selectMaxDate() {

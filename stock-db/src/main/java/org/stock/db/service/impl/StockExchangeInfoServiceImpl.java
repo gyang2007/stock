@@ -38,7 +38,7 @@ public class StockExchangeInfoServiceImpl implements IStockExchangeInfoService {
 	}
 
 	@Override
-	public StockExchangeInfo selectByCodeType(StockBaseInfo info) {
+	public List<StockExchangeInfo> selectByCodeType(StockBaseInfo info) {
 		return stockExchangeInfoDao.selectByCodeType(info);
 	}
 

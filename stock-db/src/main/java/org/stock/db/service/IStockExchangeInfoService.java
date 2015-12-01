@@ -11,7 +11,7 @@ public interface IStockExchangeInfoService {
 	void saveStockExchangeInfoList(List<StockExchangeInfo> infos);
 	StockExchangeInfo selectByCodeFomMaxDate(StockBaseInfo info);
 	StockExchangeInfo selectByCodeTypeFomMaxDate(StockBaseInfo info);
-	StockExchangeInfo selectByCodeType(StockBaseInfo info);
+	List<StockExchangeInfo> selectByCodeType(StockBaseInfo info);
 
 	/**
 	 * 获取每一个CODE值的最大交易日期

@@ -1,10 +1,11 @@
-package org.stock.business.analysis;
+package org.stock.analysis.service.impl;
 
 import com.google.common.collect.Lists;
 import com.google.common.math.DoubleMath;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.stock.analysis.service.IStockPriceChangeService;
 import org.stock.common.bean.StockBaseInfo;
 import org.stock.common.bean.StockExchangeInfo;
 import org.stock.common.util.SortStockUtil;
@@ -12,24 +13,13 @@ import org.stock.common.util.SortStockUtil;
 import java.util.List;
 
 /**
- * 股票涨幅分析
- *
- * Created by gyang on 15-11-30.
+ * Created by gyang on 15-12-2.
  */
-public class StockPriceChangeAnalysis {
+public class StockPriceChangeServiceImpl implements IStockPriceChangeService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(StockPriceChangeAnalysis.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(StockPriceChangeServiceImpl.class);
 
-    /**
-     * 筛选连续若干交易日股票涨幅、量比涨幅满足条件的股票
-     *
-     * @param stockExchInfosList    股票交易数据
-     * @param days  交易天数
-     * @param priceChange   涨幅
-     * @param volumeRate    量比
-     * @param volumeAvgDays    平均交易量依据天数
-     * @return
-     */
+    @Override
     public List<StockBaseInfo> continuousRising(List<List<StockExchangeInfo>> stockExchInfosList, int days, double priceChange, double volumeRate, int volumeAvgDays) {
         if(CollectionUtils.isEmpty(stockExchInfosList)) {
             LOGGER.warn("股票交易数据为空!");
@@ -97,16 +87,7 @@ public class StockPriceChangeAnalysis {
         return stockBaseInfos;
     }
 
-    /**
-     * 筛选连续若干交易日股票涨幅、量比涨幅满足条件的股票
-     *
-     * @param stockExchInfos    股票交易数据
-     * @param days  交易天数
-     * @param priceChange   涨幅
-     * @param volumeRate    量比
-     * @param volumeAvgDays    平均交易量依据天数
-     * @return
-     */
+    @Override
     public StockBaseInfo continuousRisingOne(List<StockExchangeInfo> stockExchInfos, int days, double priceChange, double volumeRate, int volumeAvgDays) {
         List<List<StockExchangeInfo>> stockExchInfosList = Lists.newArrayList();
         stockExchInfosList.add(stockExchInfos);

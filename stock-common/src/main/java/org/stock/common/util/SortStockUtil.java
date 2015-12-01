@@ -35,7 +35,7 @@ public final class SortStockUtil {
      * @param lists
      * @return
      */
-    public static List<StockExchangeInfo> sortAscending (List<StockExchangeInfo> lists) {
+    public static List<StockExchangeInfo> sortAscendingByTxDate(List<StockExchangeInfo> lists) {
         return TX_DATE_ORDERING_DESC.sortedCopy(lists);
     }
 
@@ -45,7 +45,7 @@ public final class SortStockUtil {
      * @param lists
      * @return
      */
-    public static List<StockExchangeInfo> sortDescending (List<StockExchangeInfo> lists) {
+    public static List<StockExchangeInfo> sortDescendingByTxDate(List<StockExchangeInfo> lists) {
         return TX_DATE_ORDERING_DESC.reverse().sortedCopy(lists);
     }
 }

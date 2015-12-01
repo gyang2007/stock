@@ -247,13 +247,13 @@ public class PullStockExchangeInfoData {
         });
         stockBaseInfos = ordering.sortedCopy(stockBaseInfos);
 
-        for(StockBaseInfo stockBaseInfo : stockBaseInfos) {
-            if(stockBaseInfo.getCode() > 2014) {
+/*        for(StockBaseInfo stockBaseInfo : stockBaseInfos) {
+            if(stockBaseInfo.getCode() > 600834) {
                 pull.pull(stockBaseInfo);
             }
-        }
+        }*/
 
-//        pull.pull(stockBaseInfos);
+        pull.pull(stockBaseInfos);
     }
 
     // 开启过多线程导致HTTP请求获取异常结果
