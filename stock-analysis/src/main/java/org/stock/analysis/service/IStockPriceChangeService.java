@@ -35,4 +35,22 @@ public interface IStockPriceChangeService {
      * @return
      */
     public StockBaseInfo continuousRisingOne(List<StockExchangeInfo> stockExchInfos, int days, double priceChange, double volumeRate, int volumeAvgDays);
+
+    /**
+     * 筛选出指定价格在当日振幅价格之间的交易数据
+     *
+     * @param stockExchangeInfos    交易数据
+     * @param price 指定价格
+     * @return
+     */
+    public List<StockExchangeInfo> selectExchInfoFromTotalPrice(List<StockExchangeInfo> stockExchangeInfos, double price);
+
+    /**
+     * 筛选出指定价格在当日收盘价与上一交易日收盘价之间的交易数据
+     *
+     * @param stockExchangeInfos    交易数据
+     * @param price 指定价格
+     * @return
+     */
+    public List<StockExchangeInfo> selectExchInfoFromClosePrice(List<StockExchangeInfo> stockExchangeInfos, double price);
 }
