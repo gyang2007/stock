@@ -237,6 +237,11 @@ public class PullStockExchangeInfoData {
     }
 
     private static void processSingleThread() {
+//        processStock();
+        processFound();
+    }
+
+    private static void processStock() {
         PullStockExchangeInfoData pull = new PullStockExchangeInfoData();
         List<StockBaseInfo> stockBaseInfos = pull.stockBaseInfoService.selectStockBaseInfoListByType(StockType.STOCK);
         Ordering<StockBaseInfo> ordering = Ordering.natural().onResultOf(new Function<StockBaseInfo, Comparable>() {
@@ -248,7 +253,27 @@ public class PullStockExchangeInfoData {
         stockBaseInfos = ordering.sortedCopy(stockBaseInfos);
 
 /*        for(StockBaseInfo stockBaseInfo : stockBaseInfos) {
-            if(stockBaseInfo.getCode() > 600834) {
+            if(stockBaseInfo.getCode() > 2213) {
+                pull.pull(stockBaseInfo);
+            }
+        }*/
+
+        pull.pull(stockBaseInfos);
+    }
+
+    private static void processFound() {
+        PullStockExchangeInfoData pull = new PullStockExchangeInfoData();
+        List<StockBaseInfo> stockBaseInfos = pull.stockBaseInfoService.selectStockBaseInfoListByType(StockType.STOCK_STRUCTURED_FUND);
+        Ordering<StockBaseInfo> ordering = Ordering.natural().onResultOf(new Function<StockBaseInfo, Comparable>() {
+            @Override
+            public Comparable apply(StockBaseInfo stockBaseInfo) {
+                return stockBaseInfo.getCode();
+            }
+        });
+        stockBaseInfos = ordering.sortedCopy(stockBaseInfos);
+
+/*        for(StockBaseInfo stockBaseInfo : stockBaseInfos) {
+            if(stockBaseInfo.getCode() > 2213) {
                 pull.pull(stockBaseInfo);
             }
         }*/

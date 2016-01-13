@@ -8,6 +8,7 @@ import com.google.common.io.LineReader;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -33,6 +34,8 @@ import java.util.concurrent.TimeUnit;
 public class FetchStockExchangeServiceImpl extends AbstractFetchStockExchange {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FetchStockExchangeServiceImpl.class);
+
+    private static final RequestConfig REQUEST_CONFIG = RequestConfig.custom().setConnectTimeout(3000).setSocketTimeout(3000).build();
 
     // eg: http://d.10jqka.com.cn/v2/line/hs_600868/00/2015.js
     private static final String URL_FORMATTER = "http://d.10jqka.com.cn/v2/line/hs_%s/00/%s.js";
@@ -125,14 +128,37 @@ public class FetchStockExchangeServiceImpl extends AbstractFetchStockExchange {
 
                         info.setCode(code);  // code
                         info.setType(type);  // type
-                        if(StringUtils.isEmpty(stockVals[1])) {
-                            info.setOpen(Double.valueOf(stockVals[2])); // open
-                        } else {
-                            info.setOpen(Double.valueOf(stockVals[1])); // open
+                        try {
+                            if(StringUtils.isEmpty(stockVals[1])) {
+                                info.setOpen(Double.valueOf(stockVals[2])); // open
+                            } else {
+                                info.setOpen(Double.valueOf(stockVals[1])); // open
+                            }
+                        } catch (NumberFormatException e) {
+                            info.setOpen(0.0);
+                            LOGGER.error("open is invalid, code = {}, type = {}, val = {}", new Object[]{code, type, val});
                         }
-                        info.setHight(Double.valueOf(stockVals[2]));    // high
-                        info.setLow(Double.valueOf(stockVals[3]));  // low
-                        info.setClose(Double.valueOf(stockVals[4])); // close
+
+                        try {
+                            info.setHight(Double.valueOf(stockVals[2]));    // high
+                        } catch (NumberFormatException e) {
+                            info.setHight(0.0);
+                            LOGGER.error("high is invalid, code = {}, type = {}, val = {}", new Object[]{code, type, val});
+                        }
+
+                        try {
+                            info.setLow(Double.valueOf(stockVals[3]));  // low
+                        } catch (NumberFormatException e) {
+                            info.setLow(0.0);
+                            LOGGER.error("low is invalid, code = {}, type = {}, val = {}", new Object[]{code, type, val});
+                        }
+
+                        try {
+                            info.setClose(Double.valueOf(stockVals[4])); // close
+                        } catch (NumberFormatException e) {
+                            info.setClose(0.0);
+                            LOGGER.error("close is invalid, code = {}, type = {}, val = {}", new Object[]{code, type, val});
+                        }
 
                         try {
                             if(stockVals.length >5) {
@@ -226,6 +252,7 @@ public class FetchStockExchangeServiceImpl extends AbstractFetchStockExchange {
         try {
             httpClient = HttpClients.createDefault();
             HttpGet httpGet = new HttpGet(httpUrl);
+            httpGet.setConfig(REQUEST_CONFIG);
             HttpResponse httpResponse = httpClient.execute(httpGet);
             return EntityUtils.toString(httpResponse.getEntity());
         } catch (IOException e) {

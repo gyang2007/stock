@@ -7,8 +7,10 @@ public enum StockType {
 	// 可交易的股票类型
 	STOCK(1),
 	// 指数
-	STOCK_INDEX(2);
-	
+	STOCK_INDEX(2),
+	// 分级基金(结构型基金)
+	STOCK_STRUCTURED_FUND(3);
+
 	private int value;
 
 	private static Map<Integer, StockType> map = new HashMap<Integer, StockType>();
