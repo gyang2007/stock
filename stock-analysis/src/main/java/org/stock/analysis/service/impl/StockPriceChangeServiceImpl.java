@@ -96,6 +96,45 @@ public class StockPriceChangeServiceImpl implements IStockPriceChangeService {
         return CollectionUtils.isNotEmpty(list) ? list.get(0) : null;
     }
 
+    @Override
+    public List<StockExchangeInfo> selectExchInfoFromTotalPrice(List<StockExchangeInfo> stockExchangeInfos, double price) {
+        List<StockExchangeInfo> result = Lists.newArrayList();
+
+        StockExchangeInfo last;
+        StockExchangeInfo current;
+        stockExchangeInfos = SortStockUtil.sortAscendingByTxDate(stockExchangeInfos);
+        for(int i = 1; i < stockExchangeInfos.size(); i++) {
+            last = stockExchangeInfos.get(i - 1);
+            current = stockExchangeInfos.get(i);
+
+            if(last.getClose() > current.getClose()) {
+                if(last.getClose() >= price && current.getClose() <= price) {
+                    result.add(current);
+                }
+            } else {
+                if(last.getClose() <= price && current.getClose() >= price) {
+                    result.add(current);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public List<StockExchangeInfo> selectExchInfoFromClosePrice(List<StockExchangeInfo> stockExchangeInfos, double price) {
+        List<StockExchangeInfo> result = Lists.newArrayList();
+
+        stockExchangeInfos = SortStockUtil.sortAscendingByTxDate(stockExchangeInfos);
+        for(StockExchangeInfo stockExchangeInfo : stockExchangeInfos) {
+            if(stockExchangeInfo.getLow() <= price && stockExchangeInfo.getHight() >= price) {
+                result.add(stockExchangeInfo);
+            }
+        }
+
+        return result;
+    }
+
 
     public static void main(String[] args) {
 
